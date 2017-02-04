@@ -9,13 +9,20 @@
 
 // colors
 $background-color: #fff;
+$background-color-offset: #ECEFF1;
 $key-color: #263238;
 $accent-color: #E91E63;
+$shadow-color: rgba(0,0,0,0.1);
 
 // variables
 $card-width: 120px;
 $card-height: $card-width * 35/25;
 $card-corner-radius: $card-width * 0.05;
+$card-shadow: 0 1px 10px $shadow-color;
+$card-shadow-active: 0 10px 20px $shadow-color;
+
+$spacing-unit: 20px;
+$base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
 
 body {
 	position: absolute;
@@ -30,54 +37,106 @@ body {
 	width: 100%;
 	height: 100%;
 	padding: 40px;
-	perspective: 1500;
+	perspective: 2500;
 	-webkit-user-select: none;
 }
 
-.deck {
+.card-area {
+	position: absolute;
+	background-color: $background-color-offset;
+	border-radius: 10px;
+	padding: 20px;
+	
+	&.deck-area {
+		top: $spacing-unit;
+		left: $spacing-unit;
+		width: $card-width + $spacing-unit*2;
+		height: $card-height + $spacing-unit*2;
+	}
+	
+	&.hand-area {
+		bottom: $spacing-unit;
+		left: $spacing-unit;
+		right: $spacing-unit;
+		height: $card-height + $spacing-unit*2;
+	}
 }
 
-.card {
-	position: absolute;
+.card-element {
 	width: $card-width;
 	height: $card-height;
-	transform-style: preserve-3d;
 	transform-origin: center center;
-	transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+	border-radius: $card-corner-radius;
+	box-sizing: content-box;
+	margin: -2px 0 0 -2px;
+	transition: border $base-transition;
+	border: 2px solid rgba(255,255,255,0);
 	
 	&:hover {
 		cursor: -webkit-grab;
+		border: 2px solid rgba(255,255,255,1);
 	}
 	
 	&:active {
 		cursor: -webkit-grabbing;
-		transform: translateZ(200px);
+		
+		.card-position-wrapper {
+			transform: translateZ(200px) rotateZ(-5deg) rotateX(-20deg);
+		}
+		
+		.card-shadow {
+			transform: translateY(10px) scale(1.25);
+		}
 	}
-	
-	&.facedown {
-		transform: rotateY(180deg);
-	}
-	
-	.front, 
+		
+	.card-shadow,
+	.card-position-wrapper,
+	.card,
+	.front,
 	.back {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
+		transform-origin: center center;
+		transition: transform $base-transition;
+	}
+	
+	.card {
+		transform-style: preserve-3d;
+		
+		.front, 
+		.back {
+			border-radius: $card-corner-radius;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center center;
+			-webkit-backface-visibility: hidden;
+		}
+		
+		.front {
+			background-image: url('../images/oaktown.png');
+		}
+		.back {
+			transform: rotateY(180deg);
+			background-image: url('../images/cardback-corp.png');
+		}
+		
+	}
+	
+	.card-shadow {
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center center;
-		border-radius: $card-corner-radius;
-		-webkit-backface-visibility: hidden;
-		transform-origin: center center;
+		transition: all $base-transition;
+		background-image: url('../images/card-shadow.png');
 	}
 	
-	.front {
-		background-image: url('../images/oaktown.png');
+	&.facedown {
+		.card {
+			transform: rotateY(180deg);
+		}
 	}
-	.back {
-		transform: rotateY(180deg);
-		background-image: url('../images/cardback-corp.png');
-	}
+	
 }
