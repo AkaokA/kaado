@@ -15,15 +15,17 @@ $accent-color: #E91E63;
 $shadow-color: rgba(0,0,0,0.1);
 
 // variables
-$card-width: 120px;
-$card-height: $card-width * 35/25;
-$card-corner-radius: $card-width * 0.05;
+$card-width: 80px;
+$card-height: $card-width * 35/25; // netrunner/magic aspect ratio
+$card-corner-radius: $card-width * 0.06;
+$card-border-size: 2px;
 $card-shadow: 0 1px 10px $shadow-color;
 $card-shadow-active: 0 10px 20px $shadow-color;
+$card-pickup-height: $card-width * 2;
 
 $spacing-unit: 20px;
 $base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-$quick-transition: 0.1s cubic-bezier(0.77, 0, 0.175, 1);
+$quick-transition: 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 
 body {
 	position: absolute;
@@ -38,6 +40,7 @@ body {
 	width: 100%;
 	height: 100%;
 	padding: 40px;
+	perspective-origin: center bottom;
 	perspective: 2500;
 	-webkit-user-select: none;
 }
@@ -46,7 +49,8 @@ body {
 	position: absolute;
 	background-color: $background-color-offset;
 	border-radius: 10px;
-	padding: 20px;
+	padding: $spacing-unit;
+	transition: all $quick-transition;
 	
 	&.deck-area {
 		top: $spacing-unit;
@@ -61,6 +65,10 @@ body {
 		right: $spacing-unit;
 		height: $card-height + $spacing-unit*2;
 	}
+	
+	&.ui-droppable-hover {
+		opacity: 0.5;
+	}
 }
 
 .card-element {
@@ -70,22 +78,22 @@ body {
 	transform-origin: center center;
 	border-radius: $card-corner-radius;
 	box-sizing: content-box;
-	margin: -2px 0 0 -2px;
+	margin: -$card-border-size 0 0 -$card-border-size;
 	transition: border $quick-transition;
-	border: 2px solid rgba(255,255,255,0);
+	border: $card-border-size solid rgba(255,255,255,0);
 	transform: translateZ(0);
 	transform-style: preserve-3d;
 	
 	&:hover {
 		cursor: -webkit-grab;
-		border: 2px solid rgba(255,255,255,1);
+		border: $card-border-size solid rgba(255,255,255,1);
 	}
 	
 	&:active {
 		cursor: -webkit-grabbing;
 		
 		.card-position-wrapper {
-			transform: translateZ(200px) rotateX(-15deg);
+			transform: translateZ($card-pickup-height) rotateX(-15deg);
 		}
 		
 		.card-shadow {
@@ -125,7 +133,6 @@ body {
 		}
 		.back {
 			transform: rotateY(180deg);
-			background-image: url('../images/cardback-runner.png');
 		}
 		
 	}
@@ -136,7 +143,6 @@ body {
 		background-position: center center;
 		transition: all $base-transition;
 		background-image: url('../images/card-shadow.png');
-		transform: translateZ(-1px);
 	}
 	
 	&.facedown {
