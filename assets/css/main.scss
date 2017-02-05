@@ -8,8 +8,8 @@
 
 
 // colors
-$background-color: #fff;
-$background-color-offset: #ECEFF1;
+$background-color: #263238;
+$background-color-offset: #37474F;
 $key-color: #263238;
 $accent-color: #E91E63;
 $shadow-color: rgba(0,0,0,0.1);
@@ -23,6 +23,7 @@ $card-shadow-active: 0 10px 20px $shadow-color;
 
 $spacing-unit: 20px;
 $base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+$quick-transition: 0.1s cubic-bezier(0.77, 0, 0.175, 1);
 
 body {
 	position: absolute;
@@ -63,14 +64,17 @@ body {
 }
 
 .card-element {
+	position: absolute;
 	width: $card-width;
 	height: $card-height;
 	transform-origin: center center;
 	border-radius: $card-corner-radius;
 	box-sizing: content-box;
 	margin: -2px 0 0 -2px;
-	transition: border $base-transition;
+	transition: border $quick-transition;
 	border: 2px solid rgba(255,255,255,0);
+	transform: translateZ(0);
+	transform-style: preserve-3d;
 	
 	&:hover {
 		cursor: -webkit-grab;
@@ -81,7 +85,7 @@ body {
 		cursor: -webkit-grabbing;
 		
 		.card-position-wrapper {
-			transform: translateZ(200px) rotateZ(-5deg) rotateX(-20deg);
+			transform: translateZ(200px) rotateX(-15deg);
 		}
 		
 		.card-shadow {
@@ -100,11 +104,12 @@ body {
 		width: 100%;
 		height: 100%;
 		transform-origin: center center;
-		transition: transform $base-transition;
+		transition: all $base-transition;
 	}
 	
 	.card {
 		transform-style: preserve-3d;
+		transform-origin: center center;
 		
 		.front, 
 		.back {
@@ -116,11 +121,11 @@ body {
 		}
 		
 		.front {
-			background-image: url('../images/oaktown.png');
+			
 		}
 		.back {
 			transform: rotateY(180deg);
-			background-image: url('../images/cardback-corp.png');
+			background-image: url('../images/cardback-runner.png');
 		}
 		
 	}
@@ -131,11 +136,12 @@ body {
 		background-position: center center;
 		transition: all $base-transition;
 		background-image: url('../images/card-shadow.png');
+		transform: translateZ(-1px);
 	}
 	
 	&.facedown {
 		.card {
-			transform: rotateY(180deg);
+			transform: rotateY(-180deg);
 		}
 	}
 	
