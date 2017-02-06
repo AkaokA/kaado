@@ -23,6 +23,8 @@ $card-shadow: 0 1px 10px $shadow-color;
 $card-shadow-active: 0 10px 20px $shadow-color;
 $card-pickup-height: $card-width * 2;
 
+$card-inset-magnification: 3;
+
 $spacing-unit: 20px;
 $base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
 $quick-transition: 0.2s cubic-bezier(0.77, 0, 0.175, 1);
@@ -69,6 +71,19 @@ body {
 	&.ui-droppable-hover {
 		opacity: 0.5;
 	}
+}
+
+.card-inset {
+	position: absolute;
+	top: $spacing-unit;
+	right: $spacing-unit;
+	width: $card-width * $card-inset-magnification;
+	height: $card-height * $card-inset-magnification;
+	background-color: $background-color-offset;
+	border-radius: 10px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .card-element {
