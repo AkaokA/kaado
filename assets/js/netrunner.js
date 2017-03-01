@@ -1,7 +1,7 @@
 function getNetrunnerJSON() {
   $.ajax({
     type: "GET",
-    url: "https://netrunnerdb.com/api/2.0/public/deck/863455", 
+    url: "https://netrunnerdb.com/api/2.0/public/deck/878724", 
     dataType: "json",
     crossDomain: true,
     success: function (data) {

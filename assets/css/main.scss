@@ -21,7 +21,7 @@ $card-corner-radius: $card-width * 0.06;
 $card-border-size: 2px;
 $card-shadow: 0 1px 10px $shadow-color;
 $card-shadow-active: 0 10px 20px $shadow-color;
-$card-pickup-height: $card-width * 2;
+$card-pickup-height: $card-width * 0.5;
 
 $card-inset-magnification: 3;
 
@@ -108,7 +108,7 @@ body {
 		cursor: -webkit-grabbing;
 		
 		.card-position-wrapper {
-			transform: translateZ($card-pickup-height) rotateX(-15deg);
+			transform: translateZ($card-pickup-height) rotateX(-5deg);
 		}
 		
 		.card-shadow {
