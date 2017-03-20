@@ -15,31 +15,18 @@ function getNetrunnerJSON() {
 }
 
 function netrunnerData(nrdbData) {
+  var cardBackImage = "assets/images/cardback-runner.png";
+  
 	var cards = nrdbData.data[0].cards;	
 	
 	$.each(cards, function(cardID, quantity) {
 		for (i = 0; i < quantity; i++) {
-			decklist.push(cardID);
+			decklist.push(new kaadoCard(cardID, "https://netrunnerdb.com/card_image/"+ cardID +".png", cardBackImage));
 		}
 	});
 	
 	shuffle(decklist);
 	console.log(decklist);
 	
-	buildDeck(decklist);
+	kaadoBuildDeck(decklist);
 }
-
-var hoveredCardID;
-function buildDeck(decklist) {
-	for (var i = 0; i < decklist.length; i++) {
-		kaadoCreateCard($(".play-area"));
-		
-		$(".card-element:last-child .front").css({
-			"background-image": "url('https://netrunnerdb.com/card_image/"+ decklist[i] +".png')"
-		})
-		$(".card-element:last-child .back").css({
-			"background-image": "url('assets/images/cardback-runner.png')"
-		})
-	}
-};
-

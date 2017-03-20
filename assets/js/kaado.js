@@ -1,4 +1,13 @@
 var decklist = [];
+var cardPrototype = "<div class='card-element'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
+
+class kaadoCard {
+  constructor (cardID, frontImage, backImage) {
+    this.cardID = cardID;
+    this.frontImage = frontImage;
+    this.backImage = backImage;
+  }
+}
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -25,23 +34,58 @@ function getDistance(pointA, pointB) {
 };
 
 var referencePoint = {top: 200, left: 200};
-var cardPrototype = "<div class='card-element facedown'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
 
-function kaadoCreateCard(container) {
+function kaadoCreateCardElement(container, cardData, facedown) {
 	container.append(cardPrototype);
+
+	$(".card-element:last-child").data("inset-image", cardData.frontImage);
+	
+	$(".card-element:last-child .front").css({
+		"background-image": "url("+ cardData.frontImage +")"
+	})
+	$(".card-element:last-child .back").css({
+		"background-image": "url("+ cardData.backImage +")"
+	})
+	
+	if (facedown == "facedown" || facedown == true) {
+  	$(".card-element:last-child").addClass("facedown");
+	}
+	
+  $(".card-element").mouseover( function() {
+    if (!$(this).hasClass("facedown")) {    
+      $(".card-inset").css({
+    		"background-image": "url("+ $(this).data("insetImage") +")"
+    	});
+    }
+  });
+
+/*
+  $(".card-element").mouseout( function() {    
+    $(".card-inset").css({
+  		"background-image": "none"
+  	});
+  });
+*/
+
 	
 	$(".card-element:last-child").draggable({
 		scroll: false,
 		stack: ".card-element",
 		revert: false,
 		revertDuration: 200,
-		start: function( event, ui ) {
-			
+		start: function( event, ui ) {      
+
 		},
 		drag: function( event, ui ) {
 			
 		}
 	});
+};
+
+function kaadoBuildDeck(decklist) {
+	for (var i = 0; i < decklist.length; i++) {
+		kaadoCreateCardElement($(".play-area"), decklist[i], "facedown");
+	}
 };
 
 
