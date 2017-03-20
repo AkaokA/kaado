@@ -1,7 +1,7 @@
 function getNetrunnerJSON() {
   $.ajax({
     type: "GET",
-    url: "https://netrunnerdb.com/api/2.0/public/deck/878724", 
+    url: "https://netrunnerdb.com/api/2.0/public/deck/884983", 
     dataType: "json",
     crossDomain: true,
     success: function (data) {
@@ -15,7 +15,7 @@ function getNetrunnerJSON() {
 }
 
 function netrunnerData(nrdbData) {
-  var cardBackImage = "assets/images/cardback-runner.png";
+  var cardBackImage = "assets/images/cardback-corp.png";
   
 	var cards = nrdbData.data[0].cards;	
 	
@@ -27,6 +27,5 @@ function netrunnerData(nrdbData) {
 	
 	shuffle(decklist);
 	console.log(decklist);
-	
 	kaadoBuildDeck(decklist);
 }

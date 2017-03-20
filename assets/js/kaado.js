@@ -38,7 +38,7 @@ var referencePoint = {top: 200, left: 200};
 function kaadoCreateCardElement(container, cardData, facedown) {
 	container.append(cardPrototype);
 
-	$(".card-element:last-child").data("inset-image", cardData.frontImage);
+	$(".card-element:last-child").data("cardData", cardData);
 	
 	$(".card-element:last-child .front").css({
 		"background-image": "url("+ cardData.frontImage +")"
@@ -54,19 +54,10 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   $(".card-element").mouseover( function() {
     if (!$(this).hasClass("facedown")) {    
       $(".card-inset").css({
-    		"background-image": "url("+ $(this).data("insetImage") +")"
+    		"background-image": "url("+ $(this).data("cardData").frontImage +")"
     	});
     }
   });
-
-/*
-  $(".card-element").mouseout( function() {    
-    $(".card-inset").css({
-  		"background-image": "none"
-  	});
-  });
-*/
-
 	
 	$(".card-element:last-child").draggable({
 		scroll: false,
@@ -87,7 +78,6 @@ function kaadoBuildDeck(decklist) {
 		kaadoCreateCardElement($(".play-area"), decklist[i], "facedown");
 	}
 };
-
 
 $(document).ready(function() {
 	$(".deck-area").droppable({
