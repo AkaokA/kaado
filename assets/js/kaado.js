@@ -59,39 +59,40 @@ function kaadoCreateCardElement(container, cardData, facedown) {
     }
   });
 	
-	$(".card-element:last-child").draggable({
-		scroll: false,
-		stack: ".card-element",
-		revert: false,
-		revertDuration: 200,
-		start: function( event, ui ) {      
-
-		},
-		drag: function( event, ui ) {
-			
-		}
-	});
 };
 
 function kaadoBuildDeck(decklist) {
 	for (var i = 0; i < decklist.length; i++) {
-		kaadoCreateCardElement($(".play-area"), decklist[i], "facedown");
+		kaadoCreateCardElement($(".deck-area"), decklist[i], "facedown");
 	}
 };
 
 $(document).ready(function() {
-	$(".deck-area").droppable({
-		accept: ".card-element",
-		over: function (event, ui) {
+  
+	$(".deck-area").sortable({
+  	connectWith: ".play-area, .hand-area",
+  	helper: "clone",
+  	start: function(event, ui) {
+			ui.helper.addClass("active");
+		},
+		over: function(event, ui) {
+			ui.item.addClass("facedown");
 			ui.helper.addClass("facedown");
 		},
-		out: function (event, ui) {
-			ui.helper.removeClass("facedown");
+		out: function(event, ui) {
+			ui.item.removeClass("facedown");
+      $(".card-inset").css({
+    		"background-image": "url("+ ui.item.data("cardData").frontImage +")"
+    	});
 		}
 	});
 	
-	$(".hand-area").droppable({
-		accept: ".card-element"
+	$(".hand-area").sortable({
+  	connectWith: ".play-area, .hand-area",
+  	helper: "clone",
+  	start: function(event, ui) {
+			ui.helper.addClass("active");
+		},
 	});
 	
 	getNetrunnerJSON();

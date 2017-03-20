@@ -37,14 +37,24 @@ body {
 	height: 100%;
 }
 
+.play-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	perspective-origin: center bottom;
+	perspective: 2500;
+	-webkit-user-select: none;
+}
+
 .play-area {
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	padding: $spacing-unit * 2;
-	perspective-origin: center bottom;
-	perspective: 2500;
-	-webkit-user-select: none;
+	
+  .card-element {
+    position: absolute;
+  }
 }
 
 .card-area {
@@ -52,24 +62,28 @@ body {
 	background-color: $background-color-offset;
 	border-radius: 10px;
 	padding: $spacing-unit;
-	transition: all $quick-transition;
-	
+	transition: all $quick-transition;	
+			
 	&.deck-area {
 		top: $spacing-unit;
 		left: $spacing-unit;
 		width: $card-width + $spacing-unit*2;
 		height: $card-height + $spacing-unit*2;
+		
+		.card-element {
+  		position: absolute;
+		}
 	}
 	
 	&.hand-area {
 		bottom: $spacing-unit;
 		left: $spacing-unit;
 		right: $spacing-unit;
-		height: $card-height + $spacing-unit*2;
+		min-height: $card-height + $spacing-unit*2;
 	}
 	
 	&.ui-droppable-hover {
-		opacity: 0.5;
+		background-color: $background-color;
 	}
 }
 
@@ -87,13 +101,14 @@ body {
 }
 
 .card-element {
-	position: absolute;
+// 	position: absolute;
+  display: inline-block;
 	width: $card-width;
 	height: $card-height;
 	transform-origin: center center;
 	border-radius: $card-corner-radius;
 	box-sizing: content-box;
-	margin: -$card-border-size 0 0 -$card-border-size;
+	margin: (-$card-border-size) 0 0 (-$card-border-size);
 	transition: border $quick-transition;
 	border: $card-border-size solid rgba(255,255,255,0);
 	transform: translateZ(0);
@@ -104,7 +119,7 @@ body {
 		border: $card-border-size solid rgba(255,255,255,1);
 	}
 	
-	&:active {
+	&.active {
 		cursor: -webkit-grabbing;
 		
 		.card-position-wrapper {
@@ -165,5 +180,4 @@ body {
 			transform: rotateY(-180deg);
 		}
 	}
-	
 }
