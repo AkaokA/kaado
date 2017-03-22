@@ -60,6 +60,7 @@ function kaadoCreateCardElement(container, cardData, facedown) {
 	
 	// make card draggable
   $kaadoCard.draggable({
+    connectToSortable: ".kaado-card-area",
     stack: ".kaado-card",
     start: function(event, ui) {
       ui.helper.addClass("active");
