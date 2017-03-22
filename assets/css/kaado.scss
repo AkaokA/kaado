@@ -57,6 +57,7 @@ $card-inset-magnification: 2;
 .kaado-loupe {
 	width: $card-width * $card-inset-magnification;
 	height: $card-height * $card-inset-magnification;
+	border-radius: $card-corner-radius * $card-inset-magnification;
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center center;
