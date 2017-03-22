@@ -129,7 +129,7 @@ $card-inset-magnification: 2;
 		background-repeat: no-repeat;
 		background-position: center center;
 		transition: all $base-transition;
-		background-image: url('../images/card-shadow.png');
+		background-image: url('card-shadow.png');
 	}
 	
 	&.facedown {
