@@ -3,7 +3,7 @@
 
 // variables
 
-$base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+$base-transition: 0.3s cubic-bezier(0.77, 0, 0.175, 1);
 $quick-transition: 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 
 $card-width: 80px;
@@ -15,7 +15,7 @@ $card-shadow-color: rgba(0,0,0,0.1);
 $card-shadow: 0 1px 10px $card-shadow-color;
 $card-shadow-active: 0 10px 20px $card-shadow-color;
 
-$card-pickup-height: $card-width * 2;
+$card-pickup-height: $card-width * 1;
 
 $card-inset-magnification: 2;
 
@@ -48,7 +48,6 @@ $card-inset-magnification: 2;
   	height: $card-height;
   	border-radius: $card-corner-radius;
   	box-sizing: content-box;
-  	visibility: visible !important;
 	}
 }
 

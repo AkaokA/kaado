@@ -58,12 +58,21 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   	$kaadoCard.filter(":last-child").addClass("facedown");
 	}
 	
+	// make card draggable
+  $kaadoCard.draggable({
+    stack: ".kaado-card",
+    start: function(event, ui) {
+      ui.helper.addClass("active");
+    },
+    stop: function(event, ui) {
+      ui.helper.removeClass("active");
+    }
+  });
+	
 	// hover events
   $kaadoCard.mouseover( function() {
-    if (!$(this).hasClass("facedown")) {    
-      $kaadoLoupe.css({
-    		"background-image": "url("+ $(this).data("cardData").frontImage +")"
-    	});
+    if (!$(this).hasClass("facedown")) {
+      updateLoupe($(this));
     }
   });
 	
@@ -75,37 +84,36 @@ function kaadoBuildDeck(decklist) {
 	}
 };
 
+function updateLoupe(cardElement) {
+  $kaadoLoupe.css({
+		"background-image": "url("+ cardElement.data("cardData").frontImage +")"
+	});
+}
+
 function kaadoSetUpCardAreas() {
-	$kaadoDeck.sortable({
-  	connectWith: ".kaado-card-area",
-  	helper: "original",
-  	start: function(event, ui) {
-			ui.item.addClass("active");
-		},
+	$kaadoDeck.droppable({
+  	revert: 100,
 		over: function(event, ui) {
-			ui.item.addClass("facedown");
+			ui.draggable.addClass("facedown");
 		},
 		out: function(event, ui) {
-			ui.item.removeClass("facedown");
-      $kaadoLoupe.css({
-    		"background-image": "url("+ ui.item.data("cardData").frontImage +")"
-    	});
+			ui.draggable.removeClass("facedown");
+      updateLoupe(ui.draggable);
 		},
-		receive: function(event, ui) {
-			ui.item.addClass("facedown");
-			ui.item.removeClass("active");
-			ui.item.removeAttr("style");
+		drop: function(event, ui) {
+  		ui.draggable.addClass("facedown");
+			ui.draggable.removeClass("active");
+			ui.draggable.removeAttr("style");
 		},
-
 	});
 	
 	$kaadoHand.sortable({
   	connectWith: ".kaado-card-area",
-  	helper: "original",
+  	revert: 100,
   	start: function(event, ui) {
 			ui.item.addClass("active");
 		},
-		receive: function(event, ui) {
+		stop: function(event, ui) {
 			ui.item.removeClass("active");
 			ui.item.removeAttr("style");
 		}
