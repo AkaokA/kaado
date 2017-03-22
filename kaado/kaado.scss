@@ -25,6 +25,7 @@ $card-inset-magnification: 2;
 	-webkit-user-select: none;
 }
 
+.kaado-play-area,
 .kaado-card-area,
 .kaado-deck,
 .kaado-hand {
@@ -40,7 +41,13 @@ $card-inset-magnification: 2;
   	visibility: visible !important;
 	}
 }
-  
+
+.kaado-play-area {
+  .kaado-card {
+		position: absolute;
+  }
+}
+
 .kaado-deck {
 	width: $card-width;
 	height: $card-height;

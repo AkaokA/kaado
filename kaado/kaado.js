@@ -9,10 +9,12 @@ class kaadoCard {
 }
 
 var $kaadoCard;
+var $kaadoPlayArea;
 var $kaadoDeck;
 var $kaadoHand;
 var $kaadoLoupe;
 function kaadoCacheElements() {
+  $kaadoPlayArea = $(".kaado-play-area");
   $kaadoDeck = $(".kaado-deck");
   $kaadoHand = $(".kaado-hand");
   $kaadoLoupe = $(".kaado-loupe");
@@ -95,6 +97,12 @@ function updateLoupe($cardElement) {
 function kaadoSetUpCardAreas() {
   var revertDuration = 200;
   
+  $kaadoPlayArea.droppable({
+		drop: function(event, ui) {
+			ui.draggable.removeClass("active");
+		},
+  })
+  
 	$kaadoDeck.droppable({
   	revert: revertDuration,
 		over: function(event, ui) {
@@ -108,6 +116,7 @@ function kaadoSetUpCardAreas() {
   		ui.draggable.addClass("facedown");
 			ui.draggable.removeClass("active");
 			ui.draggable.removeAttr("style");
+			
 		},
 	});
 	
@@ -124,7 +133,7 @@ function kaadoSetUpCardAreas() {
 		receive: function(event, ui) {
   		ui.item.addClass("active");
   		ui.item.draggable("disable");
-		}
+		},
 	});
   
 }
