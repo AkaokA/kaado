@@ -25,24 +25,13 @@ $card-inset-magnification: 2;
 	-webkit-user-select: none;
 }
 
-.kaado-card-area {
+.kaado-card-area,
+.kaado-deck,
+.kaado-hand {
   transition: all $quick-transition;
   box-sizing: content-box;
   font-size: 0;
-  
-	&.kaado-deck {
-		width: $card-width;
-		height: $card-height;
-		
-		.kaado-card {
-  		position: absolute;
-		}
-	}
-	
-	&.kaado-hand {
-  	min-height: $card-height;
-	}
-	
+
 	.ui-sortable-placeholder {
   	width: $card-width;
   	height: $card-height;
@@ -50,6 +39,19 @@ $card-inset-magnification: 2;
   	box-sizing: content-box;
   	visibility: visible !important;
 	}
+}
+  
+.kaado-deck {
+	width: $card-width;
+	height: $card-height;
+	
+	.kaado-card {
+		position: absolute;
+	}
+}
+
+.kaado-hand {
+	min-height: $card-height;
 }
 
 .kaado-loupe {

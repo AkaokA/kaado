@@ -29,36 +29,33 @@ body {
 	height: 100%;
 }
 
-.play-area {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	padding: $spacing-unit * 2;
-}
-
-.kaado-card-area {
+.kaado-card-area,
+.kaado-deck,
+.kaado-hand {
 	position: absolute;
 	background-color: $background-color-offset;
 	border-radius: 10px;
 	padding: $spacing-unit;
-			
-	&.kaado-deck {
-		top: $spacing-unit;
-		left: $spacing-unit;
-		padding: $spacing-unit;
-	}
-	
-	&.kaado-hand {
-		bottom: $spacing-unit;
-		left: $spacing-unit;
-		right: $spacing-unit;
-		padding: $spacing-unit;
-	}
-	
+
 	.ui-sortable-placeholder {
   	background-color: $background-color;
 	}
 }
+
+.kaado-deck {
+	top: $spacing-unit;
+	left: $spacing-unit;
+	padding: $spacing-unit;
+}
+
+.kaado-hand {
+	bottom: $spacing-unit;
+	left: $spacing-unit;
+	right: $spacing-unit;
+	padding: $spacing-unit;
+}
+	
+
 
 .kaado-loupe {
 	position: absolute;
