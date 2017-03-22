@@ -21,13 +21,13 @@ function netrunnerData(nrdbData) {
 	
 	$.each(cards, function(cardID, quantity) {
 		for (i = 0; i < quantity; i++) {
-			decklist.push(new kaadoCard(cardID, "https://netrunnerdb.com/card_image/"+ cardID +".png", cardBackImage));
+			kaadoCardList.push(new kaadoCard(cardID, "https://netrunnerdb.com/card_image/"+ cardID +".png", cardBackImage));
 		}
 	});
 	
-	kaadoShuffle(decklist);
-	console.log(decklist);
-	kaadoBuildDeck(decklist);
+	kaadoShuffle(kaadoCardList);
+	console.log(kaadoCardList);
+	kaadoBuildDeck(kaadoCardList);
 }
 
 $(document).ready(function() {

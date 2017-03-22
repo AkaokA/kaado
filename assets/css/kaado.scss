@@ -48,6 +48,7 @@ $card-inset-magnification: 2;
   	height: $card-height;
   	border-radius: $card-corner-radius;
   	box-sizing: content-box;
+  	visibility: visible !important;
 	}
 }
 

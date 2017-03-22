@@ -6,7 +6,7 @@ class kaadoCard {
   }
 }
 
-var decklist = [];
+var kaadoCardList = [];
 var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
 
 var $kaadoCard;
@@ -79,9 +79,9 @@ function kaadoCreateCardElement(container, cardData, facedown) {
 	
 };
 
-function kaadoBuildDeck(decklist) {
-	for (var i = 0; i < decklist.length; i++) {
-		kaadoCreateCardElement($kaadoDeck, decklist[i], "facedown");
+function kaadoBuildDeck(kaadoCardList) {
+	for (var i = 0; i < kaadoCardList.length; i++) {
+		kaadoCreateCardElement($kaadoDeck, kaadoCardList[i], "facedown");
 	}
 };
 
@@ -92,8 +92,10 @@ function updateLoupe(cardElement) {
 }
 
 function kaadoSetUpCardAreas() {
+  var revertDuration = 200;
+  
 	$kaadoDeck.droppable({
-  	revert: 100,
+  	revert: revertDuration,
 		over: function(event, ui) {
 			ui.draggable.addClass("facedown");
 		},
@@ -110,7 +112,7 @@ function kaadoSetUpCardAreas() {
 	
 	$kaadoHand.sortable({
   	connectWith: ".kaado-card-area",
-  	revert: 100,
+  	revert: revertDuration,
   	start: function(event, ui) {
 			ui.item.addClass("active");
 		},
