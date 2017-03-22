@@ -42,22 +42,25 @@ body {
 	border-radius: 10px;
 	padding: $spacing-unit;
 			
-	&.kaado-deck-area {
+	&.kaado-deck {
 		top: $spacing-unit;
 		left: $spacing-unit;
 		padding: $spacing-unit;
 	}
 	
-	&.kaado-hand-area {
+	&.kaado-hand {
 		bottom: $spacing-unit;
 		left: $spacing-unit;
 		right: $spacing-unit;
 		padding: $spacing-unit;
 	}
 	
+	.ui-sortable-placeholder {
+  	background-color: $background-color;
+	}
 }
 
-.kaado-card-inset {
+.kaado-loupe {
 	position: absolute;
 	top: $spacing-unit;
 	right: $spacing-unit;

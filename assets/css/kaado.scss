@@ -2,7 +2,6 @@
 ---
 
 // variables
-$shadow-color: rgba(0,0,0,0.1);
 
 $base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
 $quick-transition: 0.2s cubic-bezier(0.77, 0, 0.175, 1);
@@ -11,9 +10,13 @@ $card-width: 80px;
 $card-height: $card-width * 35/25; // netrunner/magic aspect ratio
 $card-corner-radius: $card-width * 0.06;
 $card-border-size: 2px;
-$card-shadow: 0 1px 10px $shadow-color;
-$card-shadow-active: 0 10px 20px $shadow-color;
-$card-pickup-height: $card-width * 0.5;
+
+$card-shadow-color: rgba(0,0,0,0.1);
+$card-shadow: 0 1px 10px $card-shadow-color;
+$card-shadow-active: 0 10px 20px $card-shadow-color;
+
+$card-pickup-height: $card-width * 2;
+
 $card-inset-magnification: 2;
 
 .kaado-container {
@@ -27,7 +30,7 @@ $card-inset-magnification: 2;
   box-sizing: content-box;
   font-size: 0;
   
-	&.kaado-deck-area {
+	&.kaado-deck {
 		width: $card-width;
 		height: $card-height;
 		
@@ -36,12 +39,20 @@ $card-inset-magnification: 2;
 		}
 	}
 	
-	&.kaado-hand-area {
+	&.kaado-hand {
   	min-height: $card-height;
+	}
+	
+	.ui-sortable-placeholder {
+  	width: $card-width;
+  	height: $card-height;
+  	border-radius: $card-corner-radius;
+  	box-sizing: content-box;
+  	visibility: visible !important;
 	}
 }
 
-.kaado-card-inset {
+.kaado-loupe {
 	width: $card-width * $card-inset-magnification;
 	height: $card-height * $card-inset-magnification;
 	background-size: contain;
@@ -53,12 +64,12 @@ $card-inset-magnification: 2;
   display: inline-block;
 	width: $card-width;
 	height: $card-height;
-	transform-origin: center center;
 	border-radius: $card-corner-radius;
 	box-sizing: content-box;
 	margin: (-$card-border-size) 0 0 (-$card-border-size);
-	transition: border $quick-transition;
 	border: $card-border-size solid rgba(255,255,255,0);
+	transition: border $quick-transition;
+	transform-origin: center center;
 	transform: translateZ(0);
 	transform-style: preserve-3d;
 	
@@ -104,10 +115,6 @@ $card-inset-magnification: 2;
 			background-repeat: no-repeat;
 			background-position: center center;
 			-webkit-backface-visibility: hidden;
-		}
-		
-		.front {
-			
 		}
 		.back {
 			transform: rotateY(180deg);

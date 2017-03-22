@@ -1,12 +1,22 @@
-var decklist = [];
-var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
-
 class kaadoCard {
   constructor (cardID, frontImage, backImage) {
     this.cardID = cardID;
     this.frontImage = frontImage;
     this.backImage = backImage;
   }
+}
+
+var decklist = [];
+var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
+
+var $kaadoCard;
+var $kaadoDeck;
+var $kaadoHand;
+var $kaadoLoupe;
+function kaadoCacheElements() {
+  $kaadoDeck = $(".kaado-deck");
+  $kaadoHand = $(".kaado-hand");
+  $kaadoLoupe = $(".kaado-loupe");
 }
 
 function kaadoShuffle(array) {
@@ -30,23 +40,28 @@ function kaadoShuffle(array) {
 
 function kaadoCreateCardElement(container, cardData, facedown) {
 	container.append(cardPrototype);
-
-	$(".kaado-card:last-child").data("cardData", cardData);
+  $kaadoCard = $(".kaado-card");
+  
+  // attach card data to DOM element
+	$kaadoCard.filter(":last-child").data("cardData", cardData);
 	
-	$(".kaado-card:last-child .front").css({
+	// set front & back card images
+	$kaadoCard.filter(":last-child").find(".front").css({
 		"background-image": "url("+ cardData.frontImage +")"
 	})
-	$(".kaado-card:last-child .back").css({
+	$kaadoCard.filter(":last-child").find(".back").css({
 		"background-image": "url("+ cardData.backImage +")"
 	})
 	
+	// spawn card facedown if necessary
 	if (facedown == "facedown" || facedown == true) {
-  	$(".kaado-card:last-child").addClass("facedown");
+  	$kaadoCard.filter(":last-child").addClass("facedown");
 	}
 	
-  $(".kaado-card").mouseover( function() {
+	// hover events
+  $kaadoCard.mouseover( function() {
     if (!$(this).hasClass("facedown")) {    
-      $(".kaado-card-inset").css({
+      $kaadoLoupe.css({
     		"background-image": "url("+ $(this).data("cardData").frontImage +")"
     	});
     }
@@ -56,42 +71,49 @@ function kaadoCreateCardElement(container, cardData, facedown) {
 
 function kaadoBuildDeck(decklist) {
 	for (var i = 0; i < decklist.length; i++) {
-		kaadoCreateCardElement($(".kaado-deck-area"), decklist[i], "facedown");
+		kaadoCreateCardElement($kaadoDeck, decklist[i], "facedown");
 	}
 };
 
-$(document).ready(function() {
-  
-	$(".kaado-deck-area").sortable({
-  	connectWith: ".kaado-hand-area",
-  	helper: "clone",
+function kaadoSetUpCardAreas() {
+	$kaadoDeck.sortable({
+  	connectWith: ".kaado-card-area",
+  	helper: "original",
   	start: function(event, ui) {
-			ui.helper.addClass("active");
+			ui.item.addClass("active");
 		},
 		over: function(event, ui) {
 			ui.item.addClass("facedown");
-			ui.helper.addClass("facedown");
 		},
 		out: function(event, ui) {
 			ui.item.removeClass("facedown");
-			ui.helper.removeClass("facedown");
-      $(".kaado-card-inset").css({
+      $kaadoLoupe.css({
     		"background-image": "url("+ ui.item.data("cardData").frontImage +")"
     	});
 		},
 		receive: function(event, ui) {
 			ui.item.addClass("facedown");
-			ui.helper.addClass("facedown");
+			ui.item.removeClass("active");
+			ui.item.removeAttr("style");
 		},
+
 	});
 	
-	$(".kaado-hand-area").sortable({
-  	connectWith: ".kaado-deck-area",
-  	helper: "clone",
+	$kaadoHand.sortable({
+  	connectWith: ".kaado-card-area",
+  	helper: "original",
   	start: function(event, ui) {
-			ui.helper.addClass("active");
+			ui.item.addClass("active");
 		},
+		receive: function(event, ui) {
+			ui.item.removeClass("active");
+			ui.item.removeAttr("style");
+		}
 	});
-	
-	getNetrunnerJSON();
+  
+}
+
+$(document).ready(function() {
+  kaadoCacheElements();
+  kaadoSetUpCardAreas();
 });

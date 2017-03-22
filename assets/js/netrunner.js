@@ -29,3 +29,7 @@ function netrunnerData(nrdbData) {
 	console.log(decklist);
 	kaadoBuildDeck(decklist);
 }
+
+$(document).ready(function() {
+  getNetrunnerJSON();
+});
