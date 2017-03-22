@@ -1,3 +1,5 @@
+var kaadoCardList = [];
+
 class kaadoCard {
   constructor (cardID, frontImage, backImage) {
     this.cardID = cardID;
@@ -5,9 +7,6 @@ class kaadoCard {
     this.backImage = backImage;
   }
 }
-
-var kaadoCardList = [];
-var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
 
 var $kaadoCard;
 var $kaadoDeck;
@@ -39,6 +38,8 @@ function kaadoShuffle(array) {
 }
 
 function kaadoCreateCardElement(container, cardData, facedown) {
+  var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
+  
 	container.append(cardPrototype);
   $kaadoCard = $(".kaado-card");
   
@@ -85,9 +86,9 @@ function kaadoBuildDeck(kaadoCardList) {
 	}
 };
 
-function updateLoupe(cardElement) {
+function updateLoupe($cardElement) {
   $kaadoLoupe.css({
-		"background-image": "url("+ cardElement.data("cardData").frontImage +")"
+		"background-image": "url("+ $cardElement.data("cardData").frontImage +")"
 	});
 }
 
@@ -119,6 +120,10 @@ function kaadoSetUpCardAreas() {
 		stop: function(event, ui) {
 			ui.item.removeClass("active");
 			ui.item.removeAttr("style");
+		},
+		receive: function(event, ui) {
+  		ui.item.addClass("active");
+  		ui.item.draggable("disable");
 		}
 	});
   
