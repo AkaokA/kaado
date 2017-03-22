@@ -1,0 +1,130 @@
+---
+---
+
+// variables
+$shadow-color: rgba(0,0,0,0.1);
+
+$base-transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+$quick-transition: 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+
+$card-width: 80px;
+$card-height: $card-width * 35/25; // netrunner/magic aspect ratio
+$card-corner-radius: $card-width * 0.06;
+$card-border-size: 2px;
+$card-shadow: 0 1px 10px $shadow-color;
+$card-shadow-active: 0 10px 20px $shadow-color;
+$card-pickup-height: $card-width * 0.5;
+$card-inset-magnification: 2;
+
+.kaado-container {
+	perspective-origin: center bottom;
+	perspective: 2500;
+	-webkit-user-select: none;
+}
+
+.kaado-card-area {
+  transition: all $quick-transition;
+  box-sizing: content-box;
+  font-size: 0;
+  
+	&.kaado-deck-area {
+		width: $card-width;
+		height: $card-height;
+		
+		.kaado-card {
+  		position: absolute;
+		}
+	}
+	
+	&.kaado-hand-area {
+  	min-height: $card-height;
+	}
+}
+
+.kaado-card-inset {
+	width: $card-width * $card-inset-magnification;
+	height: $card-height * $card-inset-magnification;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.kaado-card {
+  display: inline-block;
+	width: $card-width;
+	height: $card-height;
+	transform-origin: center center;
+	border-radius: $card-corner-radius;
+	box-sizing: content-box;
+	margin: (-$card-border-size) 0 0 (-$card-border-size);
+	transition: border $quick-transition;
+	border: $card-border-size solid rgba(255,255,255,0);
+	transform: translateZ(0);
+	transform-style: preserve-3d;
+	
+	&:hover {
+		cursor: -webkit-grab;
+		border: $card-border-size solid rgba(255,255,255,1);
+	}
+	
+	&.active {
+		cursor: -webkit-grabbing;
+		
+		.card-position-wrapper {
+			transform: translateZ($card-pickup-height) rotateX(-5deg);
+		}
+		
+		.card-shadow {
+			transform: translateY(10px) scale(1.25);
+		}
+	}
+		
+	.card-shadow,
+	.card-position-wrapper,
+	.card,
+	.front,
+	.back {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		transform-origin: center center;
+		transition: all $base-transition;
+	}
+	
+	.card {
+		transform-style: preserve-3d;
+		transform-origin: center center;
+		
+		.front, 
+		.back {
+			border-radius: $card-corner-radius;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center center;
+			-webkit-backface-visibility: hidden;
+		}
+		
+		.front {
+			
+		}
+		.back {
+			transform: rotateY(180deg);
+		}
+	}
+	
+	.card-shadow {
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center center;
+		transition: all $base-transition;
+		background-image: url('../images/card-shadow.png');
+	}
+	
+	&.facedown {
+		.card {
+			transform: rotateY(-180deg);
+		}
+	}
+}

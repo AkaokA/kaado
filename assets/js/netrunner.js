@@ -25,7 +25,7 @@ function netrunnerData(nrdbData) {
 		}
 	});
 	
-	shuffle(decklist);
+	kaadoShuffle(decklist);
 	console.log(decklist);
 	kaadoBuildDeck(decklist);
 }
