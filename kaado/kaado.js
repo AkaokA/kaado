@@ -23,42 +23,43 @@ function kaadoCacheElements() {
   $kaadoLoupe = $(".kaado-loupe");
 }
 
+var animationTime = 200;
+var rotateXdeg = 0;
+var rotateYdeg = 0;
+
 function kaadoSetUpCardAreas() {
-  var revertDuration = 200;
+  var revertDuration = animationTime;
   
   $kaadoPlayArea.droppable({
-		drop: function(event, ui) {
-			ui.draggable.removeClass("active");
-		},
   })
   
 	$kaadoDeck.droppable({
   	revert: revertDuration,
-		over: function(event, ui) {
-			ui.draggable.addClass("facedown");
-		},
 		out: function(event, ui) {
 			ui.draggable.removeClass("facedown");
       kaadoUpdateLoupe(ui.draggable);
 		},
+		over: function(event, ui) {
+			ui.draggable.addClass("facedown");
+		},
 		drop: function(event, ui) {
-  		ui.draggable.addClass("facedown");
-			ui.draggable.removeClass("active");
+  		ui.draggable.removeAttr("style");
 		},
 	});
 	
 	$kaadoHand.sortable({
-  	connectWith: ".kaado-deck",
   	revert: revertDuration,
+  	helper: "original",
   	start: function(event, ui) {
-			ui.item.addClass("active");
+			startDragging(ui.item);
+		},
+		sort: function(event, ui) {
+  		setCardRotation(ui.item);
 		},
 		stop: function(event, ui) {
-			ui.item.removeClass("active");
-			ui.item.removeAttr("style");
+			stopDragging(ui.item);
 		},
 		receive: function(event, ui) {
-  		ui.item.addClass("active");
   		ui.item.draggable("disable");
 		},
 	});
@@ -83,20 +84,16 @@ function kaadoShuffle(array) {
   return array;
 }
 
-function kaadoBuildDeck(kaadoCardList) {
+function kaadoBuildDeck(container, kaadoCardList) {
 	for (var i = 0; i < kaadoCardList.length; i++) {
-		kaadoCreateCardElement($kaadoDeck, kaadoCardList[i], "facedown");
+		kaadoCreateCardElement(container, kaadoCardList[i], "facedown");
 	}
 };
 
-var animationTime = 200;
-var rotateXdeg = 0;
-var rotateYdeg = 0;
-
 function kaadoCreateCardElement(container, cardData, facedown) {
-  var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-height-wrapper'><div class='card-rotation-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div></div>"
-  
+  var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-height-wrapper'><div class='card-rotation-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div></div>"  
 	container.append(cardPrototype);
+	
   $kaadoCard = $(".kaado-card");
   
   // attach card data to DOM element
@@ -119,41 +116,16 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   $kaadoCard.draggable({
     connectToSortable: ".kaado-hand",
     stack: ".kaado-card",
+    scroll: false,
     start: function(event, ui) {
-      ui.helper.addClass("active");
-      
-      // lift card
-      var cardPickupHeight = 100;
-      ui.helper.children(".card-height-wrapper").css({
-        "transform": "translateZ("+ cardPickupHeight +"px)"
-      });
-      
-      // set initial card rotation
-      setCardRotation(ui.helper);
-      
-      // allow per-frame rotation after initial transition
-      setTimeout(function() {
-        ui.helper.find(".card-rotation-wrapper").css({
-          "transition": "transform 0"
-        });
-      }, animationTime)
+      startDragging(ui.helper)
     },
     drag: function(event, ui) {
       // dynamic card rotation
       setCardRotation(ui.helper);
     },
     stop: function(event, ui) {
-      ui.helper.removeClass("active");
-      
-      // put card back down
-      ui.helper.children(".card-height-wrapper").removeAttr("style");
-            
-      // reset card rotation
-      ui.helper.find(".card-rotation-wrapper").removeAttr("style");
-      
-      // reset rotation variables
-      rotateXdeg = 0;
-      rotateYdeg = 0;
+      stopDragging(ui.helper)
     },
   });
 	
@@ -164,10 +136,45 @@ function kaadoCreateCardElement(container, cardData, facedown) {
       kaadoUpdateLoupe($(this));
     }
   });
+  
   $kaadoCard.mouseout( function() {
     $(this).removeClass("hover");
   });
 };
+
+function startDragging(helper) {
+  helper.addClass("active");
+  
+  // lift card
+  var cardPickupHeight = 100;
+  helper.children(".card-height-wrapper").css({
+    "transform": "translateZ("+ cardPickupHeight +"px)"
+  });
+  
+  // set initial card rotation
+  setCardRotation(helper);
+  
+  // allow per-frame rotation after initial transition
+  setTimeout(function() {
+    helper.find(".card-rotation-wrapper").css({
+      "transition": "transform 0"
+    });
+  }, animationTime)
+}
+
+function stopDragging(helper) {
+  helper.removeClass("active");
+  
+  // put card back down
+  helper.children(".card-height-wrapper").removeAttr("style");
+        
+  // reset card rotation
+  helper.find(".card-rotation-wrapper").removeAttr("style");
+  
+  // reset rotation variables
+  rotateXdeg = 0;
+  rotateYdeg = 0;
+}
 
 function setCardRotation($cardElement) {
   var rotationMagnitude = 45;
