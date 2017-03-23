@@ -40,7 +40,7 @@ body {
 .kaado-card-area,
 .kaado-deck,
 .kaado-hand {
-	position: fixed;
+	position: absolute;
 	background-color: $background-color-offset;
 	border-radius: 10px;
 	padding: $spacing-unit;

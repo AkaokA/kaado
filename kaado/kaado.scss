@@ -21,7 +21,7 @@ $card-inset-magnification: 1.5;
 
 .kaado-container {
 	perspective-origin: center bottom;
-	perspective: 2500;
+	perspective: 2000;
 	-webkit-user-select: none;
 }
 
@@ -83,7 +83,7 @@ $card-inset-magnification: 1.5;
 	transform: translateZ(0);
 	transform-style: preserve-3d;
 	
-	&:hover {
+	&.hover {
 		cursor: -webkit-grab;
 		border: $card-border-size solid rgba(255,255,255,1);
 	}
@@ -91,17 +91,14 @@ $card-inset-magnification: 1.5;
 	&.active {
 		cursor: -webkit-grabbing;
 		
-		.card-position-wrapper {
-			transform: translateZ($card-pickup-height) rotateX(-5deg);
-		}
-		
 		.card-shadow {
 			transform: translateY(10px) scale(1.25);
 		}
 	}
 		
 	.card-shadow,
-	.card-position-wrapper,
+	.card-height-wrapper,
+	.card-rotation-wrapper,
 	.card,
 	.front,
 	.back {
@@ -111,9 +108,14 @@ $card-inset-magnification: 1.5;
 		width: 100%;
 		height: 100%;
 		transform-origin: center center;
-		transition: all $base-transition;
+		transition: transform $base-transition;
 	}
 	
+  .card-height-wrapper,
+	.card-rotation-wrapper {
+  	transform-style: preserve-3d;
+	}
+
 	.card {
 		transform-style: preserve-3d;
 		transform-origin: center center;

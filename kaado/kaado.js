@@ -8,6 +8,7 @@ class kaadoCard {
   }
 }
 
+var $kaadoContainer;
 var $kaadoCard;
 var $kaadoPlayArea;
 var $kaadoDeck;
@@ -15,6 +16,7 @@ var $kaadoHand;
 var $kaadoLoupe;
 
 function kaadoCacheElements() {
+  $kaadoContainer = $(".kaado-container");
   $kaadoPlayArea = $(".kaado-play-area");
   $kaadoDeck = $(".kaado-deck");
   $kaadoHand = $(".kaado-hand");
@@ -37,13 +39,11 @@ function kaadoSetUpCardAreas() {
 		},
 		out: function(event, ui) {
 			ui.draggable.removeClass("facedown");
-      updateLoupe(ui.draggable);
+      kaadoUpdateLoupe(ui.draggable);
 		},
 		drop: function(event, ui) {
   		ui.draggable.addClass("facedown");
 			ui.draggable.removeClass("active");
-			ui.draggable.removeAttr("style");
-			
 		},
 	});
 	
@@ -89,8 +89,13 @@ function kaadoBuildDeck(kaadoCardList) {
 	}
 };
 
+var animationTime = 200;
+var cardPickupHeight = 100;
+var rotateXdeg = 0;
+var rotateYdeg = 0;
+
 function kaadoCreateCardElement(container, cardData, facedown) {
-  var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-position-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div>"
+  var cardPrototype = "<div class='kaado-card'><div class='card-shadow'></div><div class='card-height-wrapper'><div class='card-rotation-wrapper'><div class='card'><div class='back'></div><div class='front'></div></div></div></div></div>"
   
 	container.append(cardPrototype);
   $kaadoCard = $(".kaado-card");
@@ -111,31 +116,79 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   	$kaadoCard.filter(":last-child").addClass("facedown");
 	}
 	
+	var enableRotation = false;
 	// make card draggable
   $kaadoCard.draggable({
     connectToSortable: ".kaado-hand",
     stack: ".kaado-card",
     start: function(event, ui) {
-      ui.helper.addClass("active");
+      enableRotation = false;
+      ui.helper.children(".card-height-wrapper").css({
+        "transform": "translateZ("+ cardPickupHeight +"px)"
+      });
+      kaadoDragTransform(ui.helper);
+      setTimeout(function() {
+        enableRotation = true;
+      }, animationTime)
+    },
+    drag: function(event, ui) {
+      kaadoDragTransform(ui.helper);
+      if (enableRotation) {
+        disableTransition(ui.helper)
+      }
     },
     stop: function(event, ui) {
-      ui.helper.removeClass("active");
-    }
+      enableTransition(ui.helper);
+      ui.helper.children(".card-height-wrapper").css({
+        "transform": "translateZ(0)"
+      });
+      ui.helper.find(".card-rotation-wrapper").css({
+        "transform": "translateZ(0)"
+      });
+      rotateXdeg = 0;
+      rotateYdeg = 0;
+    },
   });
 	
 	// hover events
   $kaadoCard.mouseover( function() {
+    $(this).addClass("hover");
     if (!$(this).hasClass("facedown")) {
-      updateLoupe($(this));
+      kaadoUpdateLoupe($(this));
     }
+  });
+  $kaadoCard.mouseout( function() {
+    $(this).removeClass("hover");
   });
 };
 
-function updateLoupe($cardElement) {
+function enableTransition($cardElement) {
+  $cardElement.find(".card-rotation-wrapper").css({
+    "transition": "transform "+ animationTime +"ms cubic-bezier(0.77, 0, 0.175, 1)"
+  });
+}
+
+function disableTransition($cardElement) {
+  $cardElement.find(".card-rotation-wrapper").css({
+    "transition": "transform 0"
+  });
+}
+
+function kaadoDragTransform($cardElement) {
+  var rotationMagnitude = 45;
+  rotateXdeg = 1 * ($cardElement.offset().top - $kaadoContainer.outerHeight()/2)/$kaadoContainer.outerHeight() * rotationMagnitude/2;
+//   var rotateXdeg = 0;
+  rotateYdeg = -1 * ($cardElement.offset().left + $cardElement.outerWidth()/2 - $kaadoContainer.outerWidth()/2)/$kaadoContainer.outerWidth() * rotationMagnitude;
+  $cardElement.find(".card-rotation-wrapper").css({
+    "transform": "rotateX("+ rotateXdeg +"deg) rotateY("+ rotateYdeg +"deg)"
+  })
+};
+
+function kaadoUpdateLoupe($cardElement) {
   $kaadoLoupe.css({
 		"background-image": "url("+ $cardElement.data("cardData").frontImage +")"
 	});
-}
+};
 
 $(document).ready(function() {
   kaadoCacheElements();
