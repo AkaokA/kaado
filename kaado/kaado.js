@@ -90,7 +90,6 @@ function kaadoBuildDeck(kaadoCardList) {
 };
 
 var animationTime = 200;
-var cardPickupHeight = 100;
 var rotateXdeg = 0;
 var rotateYdeg = 0;
 
@@ -115,36 +114,44 @@ function kaadoCreateCardElement(container, cardData, facedown) {
 	if (facedown == "facedown" || facedown == true) {
   	$kaadoCard.filter(":last-child").addClass("facedown");
 	}
-	
-	var enableRotation = false;
+		
 	// make card draggable
   $kaadoCard.draggable({
     connectToSortable: ".kaado-hand",
     stack: ".kaado-card",
     start: function(event, ui) {
-      enableRotation = false;
+      ui.helper.addClass("active");
+      
+      // lift card
+      var cardPickupHeight = 100;
       ui.helper.children(".card-height-wrapper").css({
         "transform": "translateZ("+ cardPickupHeight +"px)"
       });
-      kaadoDragTransform(ui.helper);
+      
+      // set initial card rotation
+      setCardRotation(ui.helper);
+      
+      // allow per-frame rotation after initial transition
       setTimeout(function() {
-        enableRotation = true;
+        ui.helper.find(".card-rotation-wrapper").css({
+          "transition": "transform 0"
+        });
       }, animationTime)
     },
     drag: function(event, ui) {
-      kaadoDragTransform(ui.helper);
-      if (enableRotation) {
-        disableTransition(ui.helper)
-      }
+      // dynamic card rotation
+      setCardRotation(ui.helper);
     },
     stop: function(event, ui) {
-      enableTransition(ui.helper);
-      ui.helper.children(".card-height-wrapper").css({
-        "transform": "translateZ(0)"
-      });
-      ui.helper.find(".card-rotation-wrapper").css({
-        "transform": "translateZ(0)"
-      });
+      ui.helper.removeClass("active");
+      
+      // put card back down
+      ui.helper.children(".card-height-wrapper").removeAttr("style");
+            
+      // reset card rotation
+      ui.helper.find(".card-rotation-wrapper").removeAttr("style");
+      
+      // reset rotation variables
       rotateXdeg = 0;
       rotateYdeg = 0;
     },
@@ -162,19 +169,7 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   });
 };
 
-function enableTransition($cardElement) {
-  $cardElement.find(".card-rotation-wrapper").css({
-    "transition": "transform "+ animationTime +"ms cubic-bezier(0.77, 0, 0.175, 1)"
-  });
-}
-
-function disableTransition($cardElement) {
-  $cardElement.find(".card-rotation-wrapper").css({
-    "transition": "transform 0"
-  });
-}
-
-function kaadoDragTransform($cardElement) {
+function setCardRotation($cardElement) {
   var rotationMagnitude = 45;
   rotateXdeg = 1 * ($cardElement.offset().top - $kaadoContainer.outerHeight()/2)/$kaadoContainer.outerHeight() * rotationMagnitude/2;
 //   var rotateXdeg = 0;
