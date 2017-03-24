@@ -1,5 +1,4 @@
 var kaadoCardList = [];
-
 class kaadoCard {
   constructor (cardID, frontImage, backImage) {
     this.cardID = cardID;
@@ -8,6 +7,14 @@ class kaadoCard {
   }
 }
 
+// Kaado parameters
+var animationTime = 200;
+
+// global vars
+var rotateXdeg = 0;
+var rotateYdeg = 0;
+
+// cacheable elements
 var $kaadoContainer;
 var $kaadoCard;
 var $kaadoPlayArea;
@@ -22,10 +29,6 @@ function kaadoCacheElements() {
   $kaadoHand = $(".kaado-hand");
   $kaadoLoupe = $(".kaado-loupe");
 }
-
-var animationTime = 200;
-var rotateXdeg = 0;
-var rotateYdeg = 0;
 
 function kaadoSetUpCardAreas() {
   var revertDuration = animationTime;
