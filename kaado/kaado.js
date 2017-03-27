@@ -189,6 +189,15 @@ function setCardRotation($cardElement) {
   })
 };
 
+function specularParallax($cardElement) {
+	var adjustment = 0;
+	var gradientString = "linear-gradient(120deg, rgba(255,255,255,0) "+ (-20 - adjustment) +"%,rgba(255,255,255,0.4) "+ (50 - adjustment) +"%,rgba(255,255,255,0) "+ (80 - adjustment) +"%, rgba(255,255,255,0) 100%), ";
+				
+	$cardElement.css({
+	  "background-image": gradientString,
+	});
+}
+
 function kaadoUpdateLoupe($cardElement) {
   $kaadoLoupe.css({
 		"background-image": "url("+ $cardElement.data("cardData").frontImage +")"
