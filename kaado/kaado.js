@@ -10,11 +10,6 @@ class kaadoCard {
 // Kaado parameters
 var animationTime = 200;
 
-// global vars
-var rotateXdeg = 0;
-var rotateYdeg = 0;
-var initialBackground;
-
 // cacheable elements
 var $kaadoContainer;
 var $kaadoCard;
@@ -127,7 +122,7 @@ function kaadoCreateCardElement(container, cardData, facedown) {
     drag: function(event, ui) {
       // dynamic card rotation
       setCardRotation(ui.helper);
-      specularParallax(ui.helper);
+      addSpecularEffect(ui.helper);
     },
     stop: function(event, ui) {
       stopDragging(ui.helper)
@@ -147,63 +142,117 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   });
 };
 
+// global vars
+var rotateXdeg = 0;
+var rotateYdeg = 0;
+
+var currentCardBG;
+
+var kaadoContainerWidth;
+var kaadoContainerHeight;
+
+var currentCardWidth;
+var currentCardHeight;
+
+var $currentCardHeightWrapper;
+var $currentCardRotationWrapper;
+var $currentCardFront;
+var $currentCardBack;
+
 function startDragging($cardElement) {
-  $cardElement.addClass("active");
+  // cache elements
+  $currentCardHeightWrapper = $cardElement.children(".card-height-wrapper");
+  $currentCardRotationWrapper = $cardElement.find(".card-rotation-wrapper");
+  $currentCardFront = $cardElement.find(".front")
+  $currentCardBack = $cardElement.find(".back")
   
+  // get dimensions
+  kaadoContainerWidth = $kaadoContainer.outerWidth();
+  kaadoContainerHeight = $kaadoContainer.outerHeight();
+  currentCardWidth = $cardElement.outerWidth();
+  currentCardHeight = $cardElement.outerHeight();
+
+  // set 'active' class
+  $cardElement.addClass("active");
+
   // lift card
   var cardPickupHeight = 100;
-  $cardElement.children(".card-height-wrapper").css({
+  $currentCardHeightWrapper.css({
     "transform": "translateZ("+ cardPickupHeight +"px)"
   });
   
   // set initial card rotation
   setCardRotation($cardElement);
-  initialBackground = $cardElement.find(".front").css("background-image");
   
   // allow per-frame rotation after initial transition
   setTimeout(function() {
-    $cardElement.find(".card-rotation-wrapper").css({
+    $currentCardRotationWrapper.css({
       "transition": "transform 0"
     });
   }, animationTime)
-}
-
-function stopDragging($cardElement) {
-  $cardElement.removeClass("active");
   
-  // put card back down
-  $cardElement.children(".card-height-wrapper").removeAttr("style");
-        
-  // reset card rotation
-  $cardElement.find(".card-rotation-wrapper").removeAttr("style");
-  
-  // reset rotation variables
-  rotateXdeg = 0;
-  rotateYdeg = 0;
-  initialBackground = null;
+  // get initial background for specular animation
+  currentCardBG = $currentCardFront.css("background-image");
 }
 
 function setCardRotation($cardElement) {
   var rotationMagnitude = 45;
   rotateXdeg = 1 * ($cardElement.offset().top - $kaadoContainer.outerHeight()/2)/$kaadoContainer.outerHeight() * rotationMagnitude/2;
-//   var rotateXdeg = 0;
   rotateYdeg = -1 * ($cardElement.offset().left + $cardElement.outerWidth()/2 - $kaadoContainer.outerWidth()/2)/$kaadoContainer.outerWidth() * rotationMagnitude;
-  $cardElement.find(".card-rotation-wrapper").css({
+  
+  $currentCardRotationWrapper.css({
     "transform": "rotateX("+ rotateXdeg +"deg) rotateY("+ rotateYdeg +"deg)"
   })
 };
 
-function specularParallax($cardElement) {
-  // TODO: fix infinite gradient adding
-  // TODO: figure out a better offset parameter to use
+function addSpecularEffect($cardElement) {  
+  var multiplier = 1000;
   
-	var adjustment = ($cardElement.offset().left + $cardElement.outerWidth()/2 - $kaadoContainer.outerWidth()/2)/$kaadoContainer.outerWidth() * 2000;
-	var gradientString = "linear-gradient(120deg, rgba(255,255,255,0) "+ (-20 - adjustment) +"%,rgba(255,255,255,0.4) "+ (50 - adjustment) +"%,rgba(255,255,255,0) "+ (80 - adjustment) +"%, rgba(255,255,255,0) 100%)";
+//   kaadoContainerWidth = $kaadoContainer.outerWidth() % (100);
+ 
+  var cardXPos = $cardElement.offset().left + currentCardWidth/2 - kaadoContainerWidth/2;
+  var cardYPos = $cardElement.offset().top + currentCardHeight/2 - kaadoContainerHeight/2;
+
+  cardXPos = cardXPos % (kaadoContainerWidth/8);
+  cardXPos = cardXPos - currentCardWidth/2;
   
-	$cardElement.find(".front").css({
-	  "background-image": gradientString + ", " + initialBackground
+  var cardXPercent = (1 - (kaadoContainerWidth - cardXPos) / kaadoContainerWidth) * -2;
+  var cardYPercent = (1 - (kaadoContainerHeight - cardYPos) / kaadoContainerHeight) * -2;
+	
+	var gradientXpos = ( cardXPercent * multiplier ) + currentCardWidth/2;
+	var gradientYpos = ( cardYPercent * multiplier ) + currentCardHeight/2;
+  
+  console.log(cardXPos);
+
+	var gradientString = "radial-gradient("+ currentCardWidth*1 +"px at "+ gradientXpos +"px "+ gradientYpos +"px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 80%, rgba(255,255,255,0) 100%)";
+  
+  
+	$currentCardFront.css({
+	  "background-image": gradientString + ", " + currentCardBG
 	});
 }
+
+function stopDragging($cardElement) {
+  // remove 'active' class
+  $cardElement.removeClass("active");
+  
+  // put card back down
+  $currentCardHeightWrapper.removeAttr("style");
+        
+  // reset card rotation
+  $currentCardRotationWrapper.removeAttr("style");
+  
+  // reset specular
+	$currentCardFront.css({
+	  "background-image": currentCardBG
+	});
+
+  // reset global variables
+  rotateXdeg = 0;
+  rotateYdeg = 0;
+  currentCardBG = null;
+}
+
 
 function kaadoUpdateLoupe($cardElement) {
   $kaadoLoupe.css({
