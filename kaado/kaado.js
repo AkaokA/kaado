@@ -13,6 +13,7 @@ var animationTime = 200;
 // global vars
 var rotateXdeg = 0;
 var rotateYdeg = 0;
+var initialBackground;
 
 // cacheable elements
 var $kaadoContainer;
@@ -126,6 +127,7 @@ function kaadoCreateCardElement(container, cardData, facedown) {
     drag: function(event, ui) {
       // dynamic card rotation
       setCardRotation(ui.helper);
+      specularParallax(ui.helper);
     },
     stop: function(event, ui) {
       stopDragging(ui.helper)
@@ -145,38 +147,40 @@ function kaadoCreateCardElement(container, cardData, facedown) {
   });
 };
 
-function startDragging(helper) {
-  helper.addClass("active");
+function startDragging($cardElement) {
+  $cardElement.addClass("active");
   
   // lift card
   var cardPickupHeight = 100;
-  helper.children(".card-height-wrapper").css({
+  $cardElement.children(".card-height-wrapper").css({
     "transform": "translateZ("+ cardPickupHeight +"px)"
   });
   
   // set initial card rotation
-  setCardRotation(helper);
+  setCardRotation($cardElement);
+  initialBackground = $cardElement.find(".front").css("background-image");
   
   // allow per-frame rotation after initial transition
   setTimeout(function() {
-    helper.find(".card-rotation-wrapper").css({
+    $cardElement.find(".card-rotation-wrapper").css({
       "transition": "transform 0"
     });
   }, animationTime)
 }
 
-function stopDragging(helper) {
-  helper.removeClass("active");
+function stopDragging($cardElement) {
+  $cardElement.removeClass("active");
   
   // put card back down
-  helper.children(".card-height-wrapper").removeAttr("style");
+  $cardElement.children(".card-height-wrapper").removeAttr("style");
         
   // reset card rotation
-  helper.find(".card-rotation-wrapper").removeAttr("style");
+  $cardElement.find(".card-rotation-wrapper").removeAttr("style");
   
   // reset rotation variables
   rotateXdeg = 0;
   rotateYdeg = 0;
+  initialBackground = null;
 }
 
 function setCardRotation($cardElement) {
@@ -190,11 +194,14 @@ function setCardRotation($cardElement) {
 };
 
 function specularParallax($cardElement) {
-	var adjustment = 0;
-	var gradientString = "linear-gradient(120deg, rgba(255,255,255,0) "+ (-20 - adjustment) +"%,rgba(255,255,255,0.4) "+ (50 - adjustment) +"%,rgba(255,255,255,0) "+ (80 - adjustment) +"%, rgba(255,255,255,0) 100%), ";
-				
-	$cardElement.css({
-	  "background-image": gradientString,
+  // TODO: fix infinite gradient adding
+  // TODO: figure out a better offset parameter to use
+  
+	var adjustment = ($cardElement.offset().left + $cardElement.outerWidth()/2 - $kaadoContainer.outerWidth()/2)/$kaadoContainer.outerWidth() * 2000;
+	var gradientString = "linear-gradient(120deg, rgba(255,255,255,0) "+ (-20 - adjustment) +"%,rgba(255,255,255,0.4) "+ (50 - adjustment) +"%,rgba(255,255,255,0) "+ (80 - adjustment) +"%, rgba(255,255,255,0) 100%)";
+  
+	$cardElement.find(".front").css({
+	  "background-image": gradientString + ", " + initialBackground
 	});
 }
 
