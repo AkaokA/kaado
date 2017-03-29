@@ -206,25 +206,23 @@ function setCardRotation($cardElement) {
 };
 
 function addSpecularEffect($cardElement) {  
-  var multiplier = 1000;
-  
-//   kaadoContainerWidth = $kaadoContainer.outerWidth() % (100);
- 
-  var cardXPos = $cardElement.offset().left + currentCardWidth/2 - kaadoContainerWidth/2;
-  var cardYPos = $cardElement.offset().top + currentCardHeight/2 - kaadoContainerHeight/2;
+  var multiplier = 100;
+   
+  var cardXPos = $cardElement.offset().left;
+  cardXPos = cardXPos % (currentCardWidth*2);
+  cardXPos = cardXPos - currentCardWidth;
 
-  cardXPos = cardXPos % (kaadoContainerWidth/8);
-  cardXPos = cardXPos - currentCardWidth/2;
+  var cardYPos = $cardElement.offset().top;
+  cardYPos = cardYPos % (currentCardHeight*2);
+  cardYPos = cardYPos - currentCardHeight;
   
-  var cardXPercent = (1 - (kaadoContainerWidth - cardXPos) / kaadoContainerWidth) * -2;
-  var cardYPercent = (1 - (kaadoContainerHeight - cardYPos) / kaadoContainerHeight) * -2;
+  var cardXPercent = (1 - (currentCardWidth - cardXPos) / currentCardWidth) * -2;
+  var cardYPercent = (1 - (currentCardHeight - cardYPos) / currentCardHeight) * -2;
 	
 	var gradientXpos = ( cardXPercent * multiplier ) + currentCardWidth/2;
-	var gradientYpos = ( cardYPercent * multiplier ) + currentCardHeight/2;
+	var gradientYpos = ( cardYPercent * multiplier ) + currentCardHeight/4;
   
-  console.log(cardXPos);
-
-	var gradientString = "radial-gradient("+ currentCardWidth*1 +"px at "+ gradientXpos +"px "+ gradientYpos +"px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 80%, rgba(255,255,255,0) 100%)";
+	var gradientString = "radial-gradient("+ currentCardWidth*1.5 +"px at "+ gradientXpos +"px "+ gradientYpos +"px, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0.1) 80%, rgba(255,255,255,0) 100%)";
   
   
 	$currentCardFront.css({
