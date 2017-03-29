@@ -46,22 +46,36 @@ function kaadoSetUpCardAreas() {
 		},
 	});
 	
-	$kaadoHand.sortable({
+	$kaadoHand.droppable({
   	revert: revertDuration,
-  	helper: "original",
-  	start: function(event, ui) {
-			startDragging(ui.item);
-		},
-		sort: function(event, ui) {
-  		setCardRotation(ui.item);
-		},
-		stop: function(event, ui) {
-			stopDragging(ui.item);
-		},
-		receive: function(event, ui) {
-  		ui.item.draggable("disable");
-		},
+  	drop: function(event, ui) {
+    	ui.draggable.appendTo($(".card-fan"));
+    	fanCards();
+  	}
 	});
+	
+	setUpCardFan();
+}
+
+var fanWidth = 500;
+var fanRadius = 500;
+var fanAngle;
+
+function setUpCardFan() {
+  fanAngle = 2 * Math.asin( fanWidth / (2 * fanRadius) ); // result in radians
+
+  console.log( fanAngle * 180 / Math.PI );
+  
+  $kaadoHand.append("<div class='card-fan'></div>");
+	$(".card-fan").outerWidth = fanWidth;
+	
+	fanCards();
+}
+
+function fanCards() {
+  $(".card-fan").children(".kaado-card").each(function(index) {
+    
+  });
 }
 
 function kaadoShuffle(array) {
@@ -84,7 +98,7 @@ function kaadoShuffle(array) {
 }
 
 function kaadoBuildDeck(container, kaadoCardList) {
-	for (var i = 0; i < kaadoCardList.length; i++) {
+	for (var i = 0; i < 5; i++) {
 		kaadoCreateCardElement(container, kaadoCardList[i], "facedown");
 	}
 };
@@ -143,8 +157,8 @@ function kaadoCreateCardElement(container, cardData, facedown) {
 };
 
 // global vars
-var rotateXdeg = 0;
-var rotateYdeg = 0;
+var rotateXdeg;
+var rotateYdeg;
 
 var currentCardBG;
 

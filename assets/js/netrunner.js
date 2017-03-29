@@ -27,7 +27,8 @@ function netrunnerData(nrdbData) {
 	
 	kaadoShuffle(kaadoCardList);
 	console.log(kaadoCardList);
-	kaadoBuildDeck($(".kaado-deck"), kaadoCardList);
+	kaadoBuildDeck($(".card-fan"), kaadoCardList);
+	fanCards();
 }
 
 $(document).ready(function() {
