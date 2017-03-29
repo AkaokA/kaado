@@ -207,26 +207,26 @@ function setCardRotation($cardElement) {
 
 function addSpecularEffect($cardElement) {  
   // constants
-  var parallaxSpeed = 100;
+  var parallaxSpeed = 2;
   var gradientSize = 1.5;
-  var gridXSize = 4;
-  var gridYSize = 2;
+  var gridXSize = 1;
+  var gridYSize = 1;
   
   var cardXPos = $cardElement.offset().left;
-  cardXPos = cardXPos % (currentCardWidth * gridXSize);
+  cardXPos = cardXPos % (currentCardWidth * gridXSize*2);
   cardXPos = cardXPos - currentCardWidth;
 
   var cardYPos = $cardElement.offset().top;
-  cardYPos = cardYPos % (currentCardHeight * gridYSize);
-  cardYPos = cardYPos - currentCardHeight;
+  cardYPos = cardYPos % (currentCardWidth * gridYSize*2);
+  cardYPos = cardYPos - currentCardWidth;
   
-  var cardXPercent = (1 - (currentCardWidth - cardXPos) / currentCardWidth) * -2;
-  var cardYPercent = (1 - (currentCardHeight - cardYPos) / currentCardHeight) * -2;
+  var cardXPercent = (1 - (currentCardWidth - cardXPos) / currentCardWidth) * -2 * 100;
+  var cardYPercent = (1 - (currentCardHeight - cardYPos) / currentCardHeight) * -2 * 100;
 	
 	var gradientXpos = ( cardXPercent * parallaxSpeed ) + currentCardWidth/2;
 	var gradientYpos = ( cardYPercent * parallaxSpeed ) + currentCardHeight/2;
   
-	var gradientString = "radial-gradient("+ (currentCardWidth * gradientSize) +"px at "+ gradientXpos +"px "+ gradientYpos +"px, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0.1) 80%, rgba(255,255,255,0) 100%)";
+	var gradientString = "radial-gradient("+ (currentCardWidth * gradientSize) +"px at "+ gradientXpos +"px "+ gradientYpos +"px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0.1) 80%, rgba(255,255,255,0) 100%)";
   
 	$currentCardFront.css({
 	  "background-image": gradientString + ", " + currentCardBG
