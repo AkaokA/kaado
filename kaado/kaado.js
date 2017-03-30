@@ -42,6 +42,7 @@ function kaadoSetUpCardAreas() {
 			ui.draggable.addClass("facedown");
 		},
 		drop: function(event, ui) {
+    	ui.draggable.appendTo(event.target);
   		ui.draggable.removeAttr("style");
 		},
 	});
@@ -64,7 +65,7 @@ var fanAngle;
 function setUpCardFan() {
   fanAngle = 2 * Math.asin( fanWidth / (2 * fanRadius) ); // result in radians
 
-  console.log( fanAngle * 180 / Math.PI );
+  console.log( fanAngle * 180 / Math.PI ); // show angle in degrees
   
   $kaadoHand.append("<div class='card-fan'></div>");
 	$(".card-fan").outerWidth = fanWidth;
@@ -99,7 +100,7 @@ function kaadoShuffle(array) {
 
 function kaadoBuildDeck(container, kaadoCardList) {
 	for (var i = 0; i < 5; i++) {
-		kaadoCreateCardElement(container, kaadoCardList[i], "facedown");
+		kaadoCreateCardElement(container, kaadoCardList[i], "");
 	}
 };
 
